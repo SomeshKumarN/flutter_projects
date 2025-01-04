@@ -70,3 +70,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+.vscode/settings.json
+dice_roller/linux/flutter/generated_plugin_registrant.cc
+dice_roller/linux/flutter/generated_plugin_registrant.h
+dice_roller/linux/flutter/generated_plugins.cmake
+dice_roller/macos/Flutter/GeneratedPluginRegistrant.swift
+dice_roller/windows/flutter/generated_plugin_registrant.cc
+dice_roller/windows/flutter/generated_plugin_registrant.h
+dice_roller/windows/flutter/generated_plugins.cmake
