@@ -14,6 +14,9 @@ class OptionsButton extends StatelessWidget {
           foregroundColor: Colors.black,
           backgroundColor: Colors.grey,
         ),
-        child: Text(buttonText));
+        child: Text(
+          buttonText,
+          textAlign: TextAlign.center,
+        ));
   }
 }
