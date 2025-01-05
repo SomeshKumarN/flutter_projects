@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quiz_app/data/questions.dart';
 import 'package:quiz_app/result_text.dart';
 
@@ -32,26 +33,35 @@ class ResultsScreen extends StatelessWidget {
       return (element['correct_answer'] == element['user_answer']);
     }).length;
 
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
-        margin: EdgeInsets.all(40),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                  'You answered $numOfCorrectAnswer out of $numOfTotalQuestion questions correctly!'),
-              SizedBox(height: 30),
-              ResultText(quizResults: summaryData),
-              SizedBox(height: 30),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.refresh),
-                onPressed: onRestart,
-                label: Text('Restart Quiz!'),
-              ),
-            ],
+    return Center(
+      child: SizedBox(
+        width: double.infinity,
+        child: Container(
+          margin: EdgeInsets.all(40),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                    'You answered $numOfCorrectAnswer out of $numOfTotalQuestion questions correctly!',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.lato(
+                      color: Colors.yellow,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    )),
+                SizedBox(height: 30),
+                ResultText(quizResults: summaryData),
+                SizedBox(height: 30),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: onRestart,
+                  label: Text('Restart Quiz!'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
