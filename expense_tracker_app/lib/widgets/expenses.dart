@@ -1,5 +1,4 @@
 import 'package:expense_tracker_app/chart/chart.dart';
-import 'package:expense_tracker_app/main.dart';
 import 'package:expense_tracker_app/widgets/expenses_list/expense_data.dart';
 import 'package:expense_tracker_app/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker_app/models/expense.dart';
@@ -20,6 +19,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(
@@ -55,6 +55,7 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     Widget mainContent = Center(
       child: Text('No expenses available. Please add new Expense!'),
     );
@@ -72,15 +73,23 @@ class _ExpensesState extends State<Expenses> {
         ],
       ),
       body: Center(
-        child: Column(
-          children: [
-            Chart(expenses: _registeredExpenses),
-            Text("The Chart"),
-            Expanded(
-              child: mainContent,
-            ),
-          ],
-        ),
+        child: width < 600
+            ? Column(
+                children: [
+                  Chart(expenses: _registeredExpenses),
+                  Expanded(
+                    child: mainContent,
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(child: Chart(expenses: _registeredExpenses)),
+                  Expanded(
+                    child: mainContent,
+                  ),
+                ],
+              ),
       ),
     );
   }
