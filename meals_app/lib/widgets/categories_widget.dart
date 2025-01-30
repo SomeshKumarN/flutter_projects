@@ -1,8 +1,5 @@
 import 'package:meals_app/models/category.dart';
 import 'package:flutter/material.dart';
-import 'package:meals_app/screens/meals_screen.dart';
-import 'package:meals_app/data/dummy_data.dart';
-import 'package:meals_app/screens/navigator_screens.dart';
 
 class CategoriesWidget extends StatelessWidget {
   const CategoriesWidget({
