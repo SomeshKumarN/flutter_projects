@@ -1,14 +1,17 @@
 import 'package:meals_app/models/category.dart';
 import 'package:flutter/material.dart';
+import 'package:meals_app/models/meals.dart';
 
 class CategoriesWidget extends StatelessWidget {
   const CategoriesWidget({
     super.key,
     required this.category,
     required this.onSelectCategory,
+    required this.onToggleFavourite,
   });
   final Category category;
   final void Function() onSelectCategory;
+  final Function(Meal meal) onToggleFavourite;
   @override
   Widget build(BuildContext context) {
     return InkWell(
