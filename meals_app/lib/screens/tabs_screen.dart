@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/models/meals.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
+import 'package:meals_app/widgets/main_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({
@@ -47,6 +48,12 @@ class _TabsScreebState extends State<TabsScreen> {
     });
   }
 
+  void _setScreen(String identifier) {
+    if (identifier == "meals") {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget currentScreen =
@@ -63,6 +70,9 @@ class _TabsScreebState extends State<TabsScreen> {
         title: Text(currentScreenTitle),
       ),
       body: currentScreen,
+      drawer: MainDrawer(
+        onSelectScreen: _setScreen,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _onSelectTab,
         currentIndex: _currentIndex,
