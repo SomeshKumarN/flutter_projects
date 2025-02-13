@@ -10,7 +10,7 @@ import 'package:meals_app/provider/filters_provider.dart';
 
 const Map<Filter, bool> kinitialFilters = {
   Filter.glutonfree: false,
-  Filter.latosfree: false,
+  Filter.lactosfree: false,
   Filter.vegetarian: false,
   Filter.vegan: false
 };
@@ -54,7 +54,7 @@ class _TabsScreebState extends ConsumerState<TabsScreen> {
       if (activeFilters[Filter.glutonfree]! && !meal.isGlutenFree) {
         return false;
       }
-      if (activeFilters[Filter.latosfree]! && !meal.isLactoseFree) {
+      if (activeFilters[Filter.lactosfree]! && !meal.isLactoseFree) {
         return false;
       }
       if (activeFilters[Filter.vegetarian]! && !meal.isVegetarian) {
