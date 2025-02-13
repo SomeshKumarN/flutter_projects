@@ -8,15 +8,13 @@ class MealsWidget extends StatelessWidget {
   const MealsWidget({
     super.key,
     required this.meal,
-    required this.onToggleFavourite,
   });
   final Meal meal;
-  final Function(Meal meal) onToggleFavourite;
+
   void _onSelectingMeal(BuildContext context, Meal meal) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => MealDetailScreen(
               meal: meal,
-              onToggleFavourite: onToggleFavourite,
             )));
   }
 

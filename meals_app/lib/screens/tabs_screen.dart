@@ -7,6 +7,7 @@ import 'package:meals_app/screens/filter.dart';
 import 'package:meals_app/screens/meals_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals_app/provider/favorite_provider.dart';
 
 const Map<Filter, bool> kinitialFilters = {
   Filter.glutonfree: false,
@@ -28,31 +29,8 @@ class TabsScreen extends ConsumerStatefulWidget {
 
 class _TabsScreebState extends ConsumerState<TabsScreen> {
   var _currentIndex = 0;
-  final List<Meal> _favouriteMeals = [];
+
   Map<Filter, bool> _selectedFilters = kinitialFilters;
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
-  void _toggleFavouriteMeal(Meal meal) {
-    if (_favouriteMeals.contains(meal)) {
-      setState(() {
-        _favouriteMeals.remove(meal);
-        _showMessage("Removed from Favourites");
-      });
-    } else {
-      setState(() {
-        _favouriteMeals.add(meal);
-        _showMessage("Added to Favourites");
-      });
-    }
-  }
 
   void _onSelectTab(int index) {
     setState(() {
@@ -92,13 +70,12 @@ class _TabsScreebState extends ConsumerState<TabsScreen> {
       }
       return true;
     }).toList();
-    Widget currentScreen = CategoriesScreen(
-        onToggleFavourite: _toggleFavouriteMeal,
-        availableMeals: availableMeals);
+
+    Widget currentScreen = CategoriesScreen(availableMeals: availableMeals);
     var currentScreenTitle = "Categories";
     if (_currentIndex == 1) {
-      currentScreen = MealsScreen(
-          meals: _favouriteMeals, onToggleFavourite: _toggleFavouriteMeal);
+      final favoriteMeals = ref.watch(favoriteMealProvider);
+      currentScreen = MealsScreen(meals: favoriteMeals);
       currentScreenTitle = "Your Favourites";
     }
 

@@ -7,11 +7,10 @@ class MealsScreen extends StatelessWidget {
     super.key,
     this.title,
     required this.meals,
-    required this.onToggleFavourite,
   });
   final String? title;
   final List<Meal> meals;
-  final Function(Meal meal) onToggleFavourite;
+
   @override
   Widget build(BuildContext context) {
     Widget content = Center(
@@ -42,7 +41,8 @@ class MealsScreen extends StatelessWidget {
       content = ListView.builder(
         itemCount: meals.length,
         itemBuilder: (context, index) => MealsWidget(
-            meal: meals[index], onToggleFavourite: onToggleFavourite),
+          meal: meals[index],
+        ),
       );
     }
     if (title == null) return content;
