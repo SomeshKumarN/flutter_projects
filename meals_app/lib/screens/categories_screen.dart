@@ -69,11 +69,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         ),
         children: [
           for (final category in availableCategories)
-            CategoriesWidget(
-              category: category,
-              onSelectCategory: () {
-                _onSelectCategory(context, category);
-              },
+            CategoriesWidget(              category: category,              onSelectCategory: () {                _onSelectCategory(context, category);              },
             ),
         ],
       ),
