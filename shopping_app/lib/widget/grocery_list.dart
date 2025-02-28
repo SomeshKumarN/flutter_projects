@@ -69,6 +69,17 @@ class _GroceryListState extends State<GroceryList> {
     });
   }
 
+  void removeItem(GroceryItem item) async {
+    Uri url = Uri.https(
+        'flutter-shopping-list-187e3-default-rtdb.firebaseio.com',
+        'grocery_list/${item.id}.json');
+    final response = await http.delete(url);
+    debugPrint(response.body);
+    setState(() {
+      _groceryItems.remove(item);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // loadItems();
@@ -86,9 +97,7 @@ class _GroceryListState extends State<GroceryList> {
           key: ValueKey(_groceryItems[index].id),
           background: Container(color: Color.fromRGBO(211, 69, 69, 0.8)),
           onDismissed: (direction) {
-            setState(() {
-              _groceryItems.removeAt(index);
-            });
+            removeItem(_groceryItems[index]);
           },
           child: ListTile(
             title: Text(_groceryItems[index].name),
