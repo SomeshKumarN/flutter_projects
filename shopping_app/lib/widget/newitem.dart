@@ -17,10 +17,14 @@ class _NewItemState extends State<NewItem> {
   var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categories.values.first;
+  var _isSavingInProgress = false;
 
   void saveItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      setState(() {
+        _isSavingInProgress = true;
+      });
       Uri url = Uri.https(
           'flutter-shopping-list-187e3-default-rtdb.firebaseio.com',
           'grocery_list.json');
@@ -132,14 +136,22 @@ class _NewItemState extends State<NewItem> {
             SizedBox(height: 15),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               TextButton(
-                onPressed: () {
-                  _formKey.currentState!.reset();
-                },
+                onPressed: _isSavingInProgress
+                    ? null
+                    : () {
+                        _formKey.currentState!.reset();
+                      },
                 child: Text('Reset'),
               ),
               ElevatedButton(
-                onPressed: saveItem,
-                child: Text('Add Item'),
+                onPressed: _isSavingInProgress ? null : saveItem,
+                child: _isSavingInProgress
+                    ? SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(),
+                      )
+                    : Text('Add Item'),
               ),
             ]),
           ]),
