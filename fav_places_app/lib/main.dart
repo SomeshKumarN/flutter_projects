@@ -1,5 +1,6 @@
-import 'package:fav_places_app/screens/home_screen.dart';
+import 'package:fav_places_app/screens/places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,8 +27,12 @@ final theme = ThemeData.dark(useMaterial3: true).copyWith(
 );
 
 void main() {
-  runApp(MaterialApp(
-    theme: theme,
-    home: HomeScreen(),
-  ));
+  runApp(
+    ProviderScope(
+      child: MaterialApp(
+        theme: theme,
+        home: HomeScreen(),
+      ),
+    ),
+  );
 }
