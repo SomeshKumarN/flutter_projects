@@ -8,27 +8,18 @@ class PlaceDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(place.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              place.title,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Back"),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(place.title),
         ),
-      ),
-    );
+        body: Stack(
+          children: [
+            Image.file(
+              place.image,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            )
+          ],
+        ));
   }
 }
