@@ -17,16 +17,14 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
   File? _pickedImage;
+  PlaceLocation? _pickedLocation;
   _savePlace() {
     final title = _titleController.text;
-    if (title.isEmpty) {
+    if (title.isEmpty || _pickedImage == null || _pickedLocation == null) {
       return;
     }
-    ref
-        .read(userPlaceProvider.notifier)
-        .addPlace(Place(title: title, image: _pickedImage!));
-    // Here you would typically call a method to save the place
-    // For example: ref.read(userPlaceProvider.notifier).addPlace(Place(title: title));
+    ref.read(userPlaceProvider.notifier).addPlace(
+        Place(title: title, image: _pickedImage!, location: _pickedLocation!));
     Navigator.of(context).pop();
   }
 
@@ -53,7 +51,11 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
               },
             ),
             SizedBox(height: 10),
-            LocationInput(),
+            LocationInput(
+              onPickLocation: (pickedLocation) {
+                _pickedLocation = pickedLocation;
+              },
+            ),
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: _savePlace,
