@@ -1,4 +1,5 @@
 import 'package:fav_places_app/model/place.dart';
+import 'package:fav_places_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,9 +34,22 @@ class PlaceDetailScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 80,
-                      backgroundImage: NetworkImage(locationImage),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MapScreen(place: place)));
+                      },
+                      child: ClipOval(
+                        child: SizedBox(
+                          width: 160, // Set the diameter of the circular image
+                          height: 160, // Set the diameter of the circular image
+                          child: Image.network(
+                            locationImage, // Replace with your image URL or asset
+                            fit: BoxFit
+                                .cover, // Ensures the image fits perfectly inside the circle
+                          ),
+                        ),
+                      ),
                     ),
                     Text(
                       place.location!.address,
