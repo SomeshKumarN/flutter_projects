@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:fav_places_app/model/place.dart';
+import 'package:fav_places_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,6 +28,19 @@ class _LocationInputState extends State<LocationInput> {
     final lng = _pickedLocation?.longitude;
 
     return "https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C$lat,$lng&key=AIzaSyDLBJnS20lorFgYez-Llus_EcuHmf4vc2Q";
+  }
+
+  void selectLocationOnMap() async {
+    final pickedLocation =
+        await Navigator.of(context).push<LatLng>(MaterialPageRoute(
+      builder: (context) => MapScreen(),
+    ));
+
+    if (pickedLocation == null) {
+      return;
+    }
+
+    saveLocation(pickedLocation.latitude, pickedLocation.longitude);
   }
 
   void getCurrentLocation() async {
@@ -63,7 +78,10 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
     print("Latitude: $latitude, Longitude: $longitude");
+    saveLocation(latitude, longitude);
+  }
 
+  saveLocation(double latitude, double longitude) async {
     final resData = await http.get(Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=AIzaSyDLBJnS20lorFgYez-Llus_EcuHmf4vc2Q'));
 
@@ -154,7 +172,7 @@ class _LocationInputState extends State<LocationInput> {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
-                onPressed: () {},
+                onPressed: selectLocationOnMap,
                 label: Text("Select on Map"),
                 icon: Icon(Icons.map)),
           ],

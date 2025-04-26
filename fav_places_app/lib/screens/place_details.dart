@@ -37,7 +37,9 @@ class PlaceDetailScreen extends ConsumerWidget {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MapScreen(place: place)));
+                            builder: (context) => MapScreen(
+                                  isSelecting: false,
+                                )));
                       },
                       child: ClipOval(
                         child: SizedBox(
