@@ -9,6 +9,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(userPlaceProvider.notifier).loadPlaces();
     final userPlaces = ref.watch(userPlaceProvider);
 
     return Scaffold(
