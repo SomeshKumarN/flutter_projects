@@ -23,7 +23,7 @@ class UserPlacesProvider extends StateNotifier<List<Place>> {
     );
   }
 
-  void loadPlaces() async {
+  Future<void> loadPlaces() async {
     final db = await _getDatabase();
     final List<Map<String, dynamic>> maps = await db.query('places');
     state = maps.map((map) {
