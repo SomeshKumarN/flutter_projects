@@ -8,6 +8,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _form = GlobalKey<FormState>();
+  var _enteredUsername = '';
+  var _enteredPassword = '';
+  void _submit() {
+    var isValid = _form.currentState!.validate();
+    if (isValid) {
+      _form.currentState!.save();
+      // Send the data to the server or perform any other action
+      print('Username: $_enteredUsername');
+      print('Password: $_enteredPassword');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Form(
+                      key: _form,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -57,17 +71,30 @@ class _LoginScreenState extends State<LoginScreen> {
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your username';
+                              }
+                              return null;
+                            },
+                            onSaved:
+                                (newValue) => {_enteredUsername = newValue!},
                           ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Password',
                             ),
                             obscureText: true,
+                            validator:
+                                (value) =>
+                                    value != null && value.length < 6
+                                        ? 'Password must be at least 6 characters long'
+                                        : null,
+                            onSaved:
+                                (newValue) => {_enteredPassword = newValue!},
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // Handle login logic here
-                            },
+                            onPressed: _submit,
                             child: const Text('Login'),
                           ),
                         ],
