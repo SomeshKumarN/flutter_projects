@@ -1,3 +1,6 @@
+import 'package:chat_app/screens/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -7,7 +10,20 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Chat')),
+      appBar: AppBar(
+        title: const Text('Flutter Chat'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            },
+            icon: Icon(Icons.exit_to_app),
+          ),
+        ],
+      ),
       body: Center(child: Text('Logged In!')),
     );
   }
