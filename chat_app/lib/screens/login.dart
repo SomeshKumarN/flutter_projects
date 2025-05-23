@@ -21,29 +21,40 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     _form.currentState!.save();
-    if (!isLogin) {
-      try {
+
+    try {
+      if (!isLogin) {
         final credentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredUsername,
           password: _enteredPassword,
         );
         print(credentials);
-      } on FirebaseAuthException catch (err) {
-        if (err.code == 'weak-password') {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Password is too weak')));
-        } else if (err.code == 'email-already-in-use') {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Email already in use')));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('An error occurred, please try again later'),
-            ),
-          );
-        }
+      } else {
+        final credentials = await _firebase.signInWithEmailAndPassword(
+          email: _enteredUsername,
+          password: _enteredPassword,
+        );
+        print(credentials);
+      }
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'weak-password') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Password is too weak')));
+      } else if (err.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Email already in use')));
+      } else if (err.code == 'user-not-found') {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('User not found')));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('An error occurred, please try again later'),
+          ),
+        );
       }
     }
   }
