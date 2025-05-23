@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:chat_app/screens/chat.dart';
+import 'package:chat_app/widget/user_input_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 final _firebase = FirebaseAuth.instance;
@@ -15,9 +20,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _form = GlobalKey<FormState>();
   var _enteredUsername = '';
   var _enteredPassword = '';
+  File? _selectedImage;
+
   void _submit() async {
     var isValid = _form.currentState!.validate();
-    if (!isValid) {
+    if (!isValid || _selectedImage == null && !isLogin) {
       return;
     }
     _form.currentState!.save();
@@ -28,13 +35,18 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _enteredUsername,
           password: _enteredPassword,
         );
-        print(credentials);
+        final storageRef = await FirebaseStorage.instance.ref(
+          'user_images/${credentials.user!.uid}.jpg',
+        );
+
+        storageRef.putFile(_selectedImage!);
+        final imageUrl = await storageRef.getDownloadURL();
+        print(imageUrl);
       } else {
         final credentials = await _firebase.signInWithEmailAndPassword(
           email: _enteredUsername,
           password: _enteredPassword,
         );
-        print(credentials);
       }
     } on FirebaseAuthException catch (err) {
       if (err.code == 'weak-password') {
@@ -102,6 +114,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
+                          if (!isLogin)
+                            UserInputImage(
+                              onSelectImage: (pickedImage) {
+                                _selectedImage = pickedImage;
+                              },
+                            ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Username',
