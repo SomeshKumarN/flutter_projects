@@ -8,6 +8,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  var isLogin = true;
   final _form = GlobalKey<FormState>();
   var _enteredUsername = '';
   var _enteredPassword = '';
@@ -93,9 +94,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             onSaved:
                                 (newValue) => {_enteredPassword = newValue!},
                           ),
+                          SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: _submit,
-                            child: const Text('Login'),
+                            child: Text(isLogin ? 'Login' : 'Sign Up'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                isLogin = !isLogin;
+                              });
+                            },
+                            child: Text(
+                              isLogin
+                                  ? 'Create new account'
+                                  : 'I already have an account',
+                            ),
                           ),
                         ],
                       ),
