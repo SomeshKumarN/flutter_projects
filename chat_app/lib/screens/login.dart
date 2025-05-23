@@ -17,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   var isLogin = true;
+  var _isAuthenting = false;
   final _form = GlobalKey<FormState>();
   var _enteredUsername = '';
   var _enteredPassword = '';
@@ -30,6 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _form.currentState!.save();
 
     try {
+      setState(() {
+        _isAuthenting = true;
+      });
+
       if (!isLogin) {
         final credentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredUsername,
@@ -39,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
           'user_images/${credentials.user!.uid}.jpg',
         );
 
-        storageRef.putFile(_selectedImage!);
+        await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
         print(imageUrl);
       } else {
@@ -49,6 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } on FirebaseAuthException catch (err) {
+      setState(() {
+        _isAuthenting = false;
+      });
       if (err.code == 'weak-password') {
         ScaffoldMessenger.of(
           context,
@@ -69,6 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChatScreen()),
+    );
   }
 
   @override
@@ -150,22 +162,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                 (newValue) => {_enteredPassword = newValue!},
                           ),
                           SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: _submit,
-                            child: Text(isLogin ? 'Login' : 'Sign Up'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                isLogin = !isLogin;
-                              });
-                            },
-                            child: Text(
-                              isLogin
-                                  ? 'Create new account'
-                                  : 'I already have an account',
+                          if (_isAuthenting) CircularProgressIndicator(),
+                          if (!_isAuthenting)
+                            ElevatedButton(
+                              onPressed: _submit,
+                              child: Text(isLogin ? 'Login' : 'Sign Up'),
                             ),
-                          ),
+                          if (!_isAuthenting)
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  isLogin = !isLogin;
+                                });
+                              },
+                              child: Text(
+                                isLogin
+                                    ? 'Create new account'
+                                    : 'I already have an account',
+                              ),
+                            ),
                         ],
                       ),
                     ),
