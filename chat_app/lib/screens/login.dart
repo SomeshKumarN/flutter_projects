@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,13 +15,36 @@ class _LoginScreenState extends State<LoginScreen> {
   final _form = GlobalKey<FormState>();
   var _enteredUsername = '';
   var _enteredPassword = '';
-  void _submit() {
+  void _submit() async {
     var isValid = _form.currentState!.validate();
-    if (isValid) {
-      _form.currentState!.save();
-      // Send the data to the server or perform any other action
-      print('Username: $_enteredUsername');
-      print('Password: $_enteredPassword');
+    if (!isValid) {
+      return;
+    }
+    _form.currentState!.save();
+    if (!isLogin) {
+      try {
+        final credentials = await _firebase.createUserWithEmailAndPassword(
+          email: _enteredUsername,
+          password: _enteredPassword,
+        );
+        print(credentials);
+      } on FirebaseAuthException catch (err) {
+        if (err.code == 'weak-password') {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Password is too weak')));
+        } else if (err.code == 'email-already-in-use') {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Email already in use')));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('An error occurred, please try again later'),
+            ),
+          );
+        }
+      }
     }
   }
 
