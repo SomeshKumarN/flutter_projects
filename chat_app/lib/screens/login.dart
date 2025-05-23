@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_app/screens/chat.dart';
 import 'package:chat_app/widget/user_input_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
   var isLogin = true;
   var _isAuthenting = false;
   final _form = GlobalKey<FormState>();
-  var _enteredUsername = '';
+  var _enteredEmail = '';
   var _enteredPassword = '';
+  var _enteredUserName = '';
   File? _selectedImage;
 
   void _submit() async {
@@ -37,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!isLogin) {
         final credentials = await _firebase.createUserWithEmailAndPassword(
-          email: _enteredUsername,
+          email: _enteredEmail,
           password: _enteredPassword,
         );
         final storageRef = await FirebaseStorage.instance.ref(
@@ -47,9 +49,17 @@ class _LoginScreenState extends State<LoginScreen> {
         await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
         print(imageUrl);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(credentials.user!.uid)
+            .set({
+              'username': _enteredUserName,
+              'email': _enteredEmail,
+              'image_url': imageUrl,
+            });
       } else {
         final credentials = await _firebase.signInWithEmailAndPassword(
-          email: _enteredUsername,
+          email: _enteredEmail,
           password: _enteredPassword,
         );
       }
@@ -77,10 +87,12 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ChatScreen()),
-    );
+    if (_isAuthenting) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatScreen()),
+      );
+    }
   }
 
   @override
@@ -132,21 +144,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _selectedImage = pickedImage;
                               },
                             ),
+                          if (!isLogin)
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Username',
+                              ),
+                              validator: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.length < 4) {
+                                  return 'Please enter a valid username';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) => {_enteredUserName = value!},
+                            ),
                           TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Username',
+                              labelText: 'Email address',
                             ),
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your username';
+                                return 'Please enter your Email address';
                               }
                               return null;
                             },
-                            onSaved:
-                                (newValue) => {_enteredUsername = newValue!},
+                            onSaved: (newValue) => {_enteredEmail = newValue!},
                           ),
                           TextFormField(
                             decoration: const InputDecoration(
